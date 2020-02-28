@@ -5,18 +5,21 @@ class VigenereCipheringMachine {
   //--------only eng alphabet, only 26 letters
          this.abc = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split(''); }
 
-    encode(type, string, key) {
-        if (!string || !key) {throw Error();}
-// ---------convert the key
-        let trueKey = key;
+    convertKey(string, key) {
         let pureStringL = string.replace(/[^A-Za-z]/g, '').length;
         if (key.length > pureStringL) {
-            trueKey = trueKey.slice(0, pureStringL);
+            key = key.slice(0, pureStringL);
         } else {
             while  (key.length < pureStringL) {
-                trueKey += trueKey.slice(0, pureStringL - key.length); }
+                key += key.slice(0, pureStringL - key.length); }
         }
-// -----------\\
+        return key;
+    }
+    
+    encode(type, string, key) {
+        if (!string || !key) {throw Error();}
+        
+        let trueKey = this.convertKey(string, key);
         let newMsg = [];
         let strL = '';
         let kL = '';
