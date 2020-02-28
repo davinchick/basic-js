@@ -1,12 +1,55 @@
 class VigenereCipheringMachine {
-    encrypt() {
-        throw 'Not implemented';
-        // remove line with error and write your code here
+    
+    constructor(direction = true) {
+         this.direction = direction;
+  //--------only eng alphabet, only 26 letters
+         this.abc = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split(''); }
+
+    encode(type, string, key) {
+        if (!string || !key) {throw Error();}
+// ---------convert the key
+        let trueKey = key;
+        let pureStringL = string.replace(/[^A-Za-z]/g, '').length;
+        if (key.length > pureStringL) {
+            trueKey = trueKey.slice(0, pureStringL);
+        } else {
+            while  (key.length < pureStringL) {
+                trueKey += trueKey.slice(0, pureStringL - key.length); }
+        }
+// -----------\\
+        let newMsg = [];
+        let strL = '';
+        let kL = '';
+        let indL  = 0;
+
+        for (let i = 0, j = 0; i < string.length; i++) {
+            if (string[i].match(/[A-Za-z]/) !== null) {
+                strL = string[i].toUpperCase();
+                kL = trueKey[j].toUpperCase();
+                indL  = (type === 'decrypt') ? (this.abc.indexOf(strL) - this.abc.indexOf(kL))
+                                                 : (this.abc.indexOf(strL) + this.abc.indexOf(kL));
+                if (indL  < 0) {
+                      indL  = 26 - Math.abs(indL );
+                }
+       //--------------------- as it is performed *modulo 26*
+                newMsg.push(this.abc[indL  % 26]);
+                j++;
+            } else {
+                newMsg.push(string[i]);
+            }
+        }
+        if (this.direction === true){
+            return newMsg.join('');
+        }else { return newMsg.reverse().join('');
+             }
     }
 
-    decrypt() {
-        throw 'Not implemented';
-        // remove line with error and write your code here
+    encrypt(string, key) {
+        return this.encode('encrypt', string, key);
+    }
+
+    decrypt(string, key) {
+        return this.encode('decrypt', string, key);
     }
 }
 
